@@ -2,7 +2,6 @@ package com.jckim.book.springboot.config.auth.dto;
 
 import com.jckim.book.springboot.domain.user.Role;
 import com.jckim.book.springboot.domain.user.User;
-import javafx.beans.binding.ObjectExpression;
 import lombok.Builder;
 import lombok.Getter;
 
