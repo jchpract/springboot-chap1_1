@@ -21,7 +21,18 @@ deploy:
     region: ap-northeast-2
     skip_cleanup: true
     acl: private # zip 파일 접근은 private
-    local_dir: deploy
+    local_dir: deploy # before_deploy에서 생성한 폴더이름
+    wait-until-deployed: true
+
+  - provider: codedeploy
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+    bucket: ck-springboot-build
+    key: springboot-chap1_1.zip
+    bundle_type: zip
+    application: springboot-chap1_1 # 웹콘솔에서 등록한 CodeDeploy 애플리케이션
+    deployment_group: springboot-test-group # 웹콘솔에서 등록한 codeDeploy 배포 그룹
+    region: ap-northeast-2
     wait-until-deployed: true
 
 cache:
