@@ -8,6 +8,21 @@ branches:
 before_install:
   - chmod +x gradlew
 #Travis CI 서버의 Home
+before_deploy:
+  - zip -r springboot-chap1_1 *
+  - mkdir -p deploy # travis CI가 실행중인 위치에 deploy 폴더 생성한다.
+  - mv springboot-chap1_1.zip deploy/springboot-chap1_1.zip
+
+deploy:
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY # travis CI Settings에 값을 설정했다.
+    secret_access_key: $AWS_SECRET_KEY
+    bucket: ck-springboot-build
+    region: ap-northeast-2
+    skip_cleanup: true
+    acl: private # zip 파일 접근은 private
+    local_dir: deploy
+    wait-until-deployed: true
 
 cache:
   directories:
