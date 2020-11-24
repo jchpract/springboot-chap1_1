@@ -9,9 +9,13 @@ before_install:
   - chmod +x gradlew
 #Travis CI 서버의 Home
 before_deploy:
-  - zip -r springboot-chap1_1 *
-  - mkdir -p deploy # travis CI가 실행중인 위치에 deploy 폴더 생성한다.
-  - mv springboot-chap1_1.zip deploy/springboot-chap1_1.zip
+  - mkdir -p before-deploy
+  - cp scripts/*.sh before-deploy/
+  - cp appspec.yml before-deploy/
+  - cp build/libs/*.jar before-deploy/
+  - cd before-deploy && zip -r before-deploy * # before-deploy 폴더안 전체압축
+  - cd ../ && mkdir -p deploy
+  - mv before-deploy/before-deploy.zip deploy/springboot-chap1_1.zip
 
 deploy:
   - provider: s3
@@ -22,7 +26,7 @@ deploy:
     skip_cleanup: true
     acl: private # zip 파일 접근은 private
     local_dir: deploy # before_deploy에서 생성한 폴더이름
-    wait-until-deployed: true
+    wait_until_deployed: true
 
   - provider: codedeploy
     access_key_id: $AWS_ACCESS_KEY
@@ -33,7 +37,7 @@ deploy:
     application: springboot-chap1_1 # 웹콘솔에서 등록한 CodeDeploy 애플리케이션
     deployment_group: springboot-deploy-group # 웹콘솔에서 등록한 codeDeploy 배포 그룹
     region: ap-northeast-2
-    wait-until-deployed: true
+    wait_until_deployed: true
 
 cache:
   directories:
